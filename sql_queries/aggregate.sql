@@ -4,7 +4,9 @@ CASE WHEN request_answereds.id is not null then 1 else 0 end as answered,
 CASE WHEN request_cancelleds.id is not null then 1 else 0 end as cancelled,
 request_stoppeds.created_at as stopped_at,
 request_answereds.created_at as answered_at,
-request_cancelleds.created_at as cancelled_at
+request_cancelleds.created_at as cancelled_at,
+request_answereds.created_at- request_createds.created_at as wait_length,
+request_stoppeds.created_at - request_answereds.created_at as call_length
 from requests
 left outer join request_stoppeds 
 on request_stoppeds.request_id = requests.id
