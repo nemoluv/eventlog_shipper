@@ -28,7 +28,7 @@ end
 
 def create_tables
   $db.run('CREATE TABLE requests (id text CONSTRAINT firstkey PRIMARY KEY);')
-  $db.run('CREATE TABLE request_created
+  $db.run('CREATE TABLE request_createds
 (
   id integer NOT NULL,
   request_id text NOT NULL,
@@ -50,7 +50,10 @@ require_relative './pg_models/request'
 require_relative './pg_models/request_created'
 #create_tables
 
-el =  EventLog.first(name:'request_created')
-json_serialized = el.event_log_objects[0].json_serialized
-request_id = JSON.load(json_serialized)
-Request.insert(:id => request_id)
+EventLog.find_each(name:'request_created') do |el|
+  print '.'
+  json_serialized = el.event_log_objects[0].json_serialized
+  request_id = JSON.load(json_serialized)
+  Request.insert(:id => request_id)
+  RequestCreated.insert(:request_id => request_id, :created_at => el.created_at, :updated_at => el.updated_at)
+end
