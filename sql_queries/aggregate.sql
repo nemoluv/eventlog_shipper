@@ -1,4 +1,7 @@
-﻿select requests.id, request_createds.created_at,  request_stoppeds.id as stopped, request_answereds.id as answered, request_cancelleds.id as cancelled
+﻿select requests.id, request_createds.created_at,  
+CASE WHEN request_stoppeds.id is not null then 1 else 0 end as stopped, 
+CASE WHEN request_answereds.id is not null then 1 else 0 end as answered,
+CASE WHEN request_cancelleds.id is not null then 1 else 0 end as cancelled
 from requests
 left outer join request_stoppeds 
 on request_stoppeds.request_id = requests.id
