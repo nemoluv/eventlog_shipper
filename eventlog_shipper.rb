@@ -22,5 +22,5 @@ end
 config = load_config
 setup_mongo config
 
-p EventLog.first
+p EventLog.first(name:'request_created')
 
